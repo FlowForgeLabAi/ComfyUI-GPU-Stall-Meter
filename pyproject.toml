@@ -5,7 +5,7 @@ version = "0.1.0"
 authors = [{ name = "FlowForgeLabAi" }]
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
-dependencies = ["nvidia-ml-py>=12", "psutil>=5.9"]
+dependencies = ["psutil>=5.9"]
 keywords = [
   "comfyui",
   "comfyui-custom-nodes",
@@ -32,6 +32,10 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
 ]
+
+[project.optional-dependencies]
+# Optional: NVML is otherwise read through ctypes against the driver's own library.
+nvml = ["nvidia-ml-py>=12"]
 
 [project.urls]
 Repository = "https://github.com/FlowForgeLabAi/ComfyUI-GPU-Stall-Meter"

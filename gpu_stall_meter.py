@@ -101,6 +101,18 @@ class GpuStallSampler:
             import pynvml
 
             return pynvml
+        except Exception:
+            pass
+
+        # No pynvml / nvidia-ml-py: bind the driver's own NVML library through ctypes
+        # so the pack needs no dependency beyond psutil.
+        try:
+            try:
+                from .nvml_ctypes import open_nvml
+            except ImportError:
+                from nvml_ctypes import open_nvml
+
+            return open_nvml()
         except Exception as exc:
             logging.warning("[StallMeter] NVIDIA metrics unavailable: %s", exc)
             return None

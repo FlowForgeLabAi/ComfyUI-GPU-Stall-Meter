@@ -63,8 +63,10 @@ is that the GPU is waiting on the pagefile. All four thresholds are settings, no
 ## Install
 
 ComfyUI Manager: search for `GPU Stall Meter`.
-Manual: clone or unzip into `ComfyUI/custom_nodes/` and restart ComfyUI. Dependencies
-(`nvidia-ml-py`, `psutil`) install with the pack; `psutil` is usually already present.
+Manual: clone or unzip into `ComfyUI/custom_nodes/` and restart ComfyUI. The only required
+dependency is `psutil`, which most ComfyUI environments already have. NVML is read through
+`pynvml` when it is installed, and through `ctypes` against the driver's own `nvml.dll` /
+`libnvidia-ml.so.1` otherwise, so the pack installs nothing else.
 
 ## Settings
 
