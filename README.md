@@ -1,5 +1,7 @@
 # ComfyUI GPU Stall Meter
 
+English | [简体中文](README.zh-CN.md)
+
 GPU utilization tells you the SM is busy. It does not tell you what the SM is busy *with*.
 
 When a workflow stalls on host-memory paging, utilization stays pinned at 99-100% while the
