@@ -1,0 +1,46 @@
+[project]
+name = "gpu-stall-meter"
+description = "Top-bar GPU meters that tell computing apart from paging: GPU power draw, SM clock, host RAM pressure, and a stall verdict that utilization alone cannot give, because utilization keeps reading 99% while a workflow waits on the pagefile."
+version = "0.1.0"
+authors = [{ name = "FlowForgeLabAi" }]
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+dependencies = ["nvidia-ml-py>=12", "psutil>=5.9"]
+keywords = [
+  "comfyui",
+  "comfyui-custom-nodes",
+  "resource-monitor",
+  "gpu-power",
+  "power-draw",
+  "sm-clock",
+  "gpu-utilization",
+  "nvml",
+  "nvidia",
+  "vram",
+  "low-vram",
+  "paging",
+  "pagefile",
+  "thrashing",
+  "stall-detection",
+  "bottleneck",
+  "diagnostics",
+  "video-generation",
+  "minimax-h3",
+]
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+]
+
+[project.urls]
+Repository = "https://github.com/FlowForgeLabAi/ComfyUI-GPU-Stall-Meter"
+"Bug Tracker" = "https://github.com/FlowForgeLabAi/ComfyUI-GPU-Stall-Meter/issues"
+"Measured data" = "https://huggingface.co/datasets/FlowForgeLabAi/minimax-h3-8gb-bench"
+
+[tool.comfy]
+DisplayName = "GPU Stall Meter"
+requires-comfyui = ">=0.3.0"
+# PublisherId is required by the ComfyUI registry before `comfy node publish` will
+# accept a release. Register a publisher at https://comfy.org/ first, then add:
+# PublisherId = "<your-publisher-id>"
