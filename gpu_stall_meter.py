@@ -6,9 +6,10 @@ at 99-100% while the GPU waits for pages to arrive, so the two states are separa
 only from signals other than utilization: GPU power draw, SM clock and host RAM
 pressure.  The default thresholds come from measurements documented in README.md.
 
-No GPU library is imported at module import time: `psutil` and `pynvml` are resolved
-lazily, and the test suite injects fakes, so this file imports on a machine with no
-GPU, no ComfyUI and no third-party packages at all.
+No GPU library is imported at module import time: `pynvml` is used when it is present and
+the driver's own library is bound through ctypes otherwise, and the test suite injects
+fakes, so this file imports on a machine with no GPU, no ComfyUI and no third-party
+packages at all.
 """
 
 from __future__ import annotations
@@ -77,6 +78,7 @@ class GpuStallSampler:
         self._nvml_ready = False
         self._nvml_attempted = False
         self._nvml_warning_logged = False
+        self._client_build = None
 
         self.settings = dict(DEFAULT_SETTINGS)
         if settings:
@@ -159,6 +161,16 @@ class GpuStallSampler:
     def settings_snapshot(self) -> dict:
         with self._lock:
             return dict(self.settings)
+
+    def note_client_build(self, build) -> None:
+        """Remember which frontend build is polling, so the browser's copy is knowable.
+
+        The panel is pointer-events: none and therefore cannot be hovered, so without this
+        there is no way to tell a stale cached bundle from a fresh one.
+        """
+        text = _decode_text(build).strip()
+        if text:
+            self._client_build = text[:64]
 
     def reset_calibration(self) -> None:
         self._samples = 0
@@ -334,6 +346,7 @@ class GpuStallSampler:
             "sampled_at": int(time.time() * 1000),
             "samples": self._samples,
             "calibrating": self._samples < self.settings["warmup_samples"],
+            "client_build": self._client_build,
             "settings": dict(self.settings),
             "host": host,
             "gpus": gpus,
@@ -371,8 +384,10 @@ def register_gpu_stall_meter_routes() -> None:
         return
 
     @routes.get("/gpu-stall-meter/sample")
-    async def gpu_stall_meter_sample(_request):
-        response = web.json_response(get_snapshot())
+    async def gpu_stall_meter_sample(request):
+        sampler = get_sampler()
+        sampler.note_client_build(request.query.get("build"))
+        response = web.json_response(sampler.sample())
         response.headers["Cache-Control"] = "no-store"
         return response
 

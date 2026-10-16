@@ -2,16 +2,19 @@
 
 Registers the sampler route and serves the top-bar readout.  Import failures are
 logged rather than raised: a monitoring helper must never stop ComfyUI from starting.
+
+The pack contributes no nodes, but ComfyUI's loader still requires a mappings export
+before it keeps a custom node directory, so both mappings are declared empty.
 """
 
 import logging
 
-try:
-    import comfy  # noqa: F401  (present only inside ComfyUI; used as a load-order hint)
-
-    _INSIDE_COMFY = True
-except Exception:
-    _INSIDE_COMFY = False
+# Declared empty on purpose: this pack adds one route and one web extension, no nodes.
+# Without these names ComfyUI logs "Skip ... due to the lack of NODE_CLASS_MAPPINGS or
+# comfy_entrypoint" and lists the pack as an import failure, even though the route and
+# the web assets do load.  Verified against ComfyUI 0.35.0 on 2026-10-16.
+NODE_CLASS_MAPPINGS = {}
+NODE_DISPLAY_NAME_MAPPINGS = {}
 
 try:
     try:
@@ -24,4 +27,4 @@ except Exception as exc:
 
 WEB_DIRECTORY = "./web/js"
 
-__all__ = ["WEB_DIRECTORY"]
+__all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]
