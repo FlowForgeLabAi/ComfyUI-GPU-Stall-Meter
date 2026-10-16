@@ -44,6 +44,7 @@ Repository = "https://github.com/FlowForgeLabAi/ComfyUI-GPU-Stall-Meter"
 
 [tool.comfy]
 DisplayName = "GPU Stall Meter"
+Icon = "https://raw.githubusercontent.com/FlowForgeLabAi/ComfyUI-GPU-Stall-Meter/main/icon.png"
 requires-comfyui = ">=0.3.0"
 # PublisherId is required by the ComfyUI registry before `comfy node publish` will
 # accept a release. Register a publisher at https://comfy.org/ first, then add:
